@@ -1,0 +1,9 @@
+.nav-item a
+{
+    border-bottom: 1px solid blue;
+    color: black;
+}
+.nav-item a:hover
+{
+    color:blue;
+}
