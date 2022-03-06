@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('title')->unique();
             $table->text('description');
             $table->string('image');
-            $table->integer('category_id');
+            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->boolean('is_active');
             $table->timestamps();
         });

@@ -1,9 +1,24 @@
 .nav-item a
 {
-    border-bottom: 1px solid blue;
+    border-bottom: 1px solid rgb(6, 71, 71);
     color: black;
 }
-.nav-item a:hover
+.nav-item .active
 {
-    color:blue;
+    background-color: rgb(6, 71, 71);
+    color: white;
+}
+.nav-item a:hover, not:active
+{
+    background-color: rgb(6, 71, 71);
+    color:rgb(255, 255, 255);
+}
+
+.g-0{
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+ul li{
+    list-style: none;
 }
