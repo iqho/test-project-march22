@@ -19,6 +19,9 @@
               <th>Product Title</th>
               <th>Product Description</th>
               <th class="text-center">Product Image</th>
+              <th class="text-center">Price</th>
+              <th class="text-center">Price Type</th>
+              <th class="text-center">Price Active Date</th>
               <th class="text-center">Active Status</th>
               <th class="text-center">Category</th>
               <th class="text-center">Action</th>
@@ -32,8 +35,23 @@
             <tr>
               <td class="align-middle text-center">{{ $i++ }}</td>
               <td class="align-middle">{{ $product->title }}</td>
-              <td class="align-middle">{{ $product->description }}</td>
-              <td class="align-middle text-center"><img src="{{ asset('product-images/'.$product->image) }}" alt="{{ $product->title }}" height="40" width="45"> </td>
+              <td class="align-middle">
+                @if ($product->image)
+                  {{ $product->description }}
+                @else
+                No Description
+                @endif
+              </td>
+              <td class="align-middle text-center">
+                @if ($product->image)
+                <img src="{{ asset('product-images/'.$product->image) }}" alt="{{ $product->title }}" height="40" width="45"> 
+                @else
+                No Image
+                @endif
+              </td>
+              <td class="align-middle">{{ $product->price_info }}</td>
+              <td class="align-middle">{{ $product->title }}</td>
+              <td class="align-middle">{{ $product->title }}</td>
               <td class="align-middle text-center">
                     @if ($product->is_active == 1)
                         <button class="btn btn-success">Active</button>

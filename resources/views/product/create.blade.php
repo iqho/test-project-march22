@@ -21,11 +21,11 @@
             </div>
             <div class="mb-3 w-50">
                 <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" name="description" id="description" rows="3" required>{{ old('description') }}</textarea>
+                <textarea class="form-control" name="description" id="description" rows="3">{{ old('description') }}</textarea>
             </div>
             <div class="mb-3 w-50">
                 <label for="image" class="form-label">Product Image</label>
-                <input class="form-control" type="file" id="image" name="image" required>
+                <input class="form-control" type="file" id="image" name="image">
             </div>
             <div class="col-md-12 mb-2">
                 <img id="preview-image-before-upload" src="{{ asset('assets/images/image-not-available.jpg') }}"
@@ -41,6 +41,23 @@
                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach
               </select>
+            <div class="mb-3 w-50">
+                <label for="price" class="form-label">Product Price</label>
+                <input type="number" class="form-control" name="price" id="price" placeholder="Product Price"
+                    value="{{ old('price') }}" required>
+            </div>
+            <label for="price_type" class="form-label">Product Price Type</label>
+            <select class="form-select mb-3" id="price_type" name="price_type" required>
+                <option selected>Select Product Price Type</option>
+                @foreach ($price_types as $ptype)
+                <option value="{{ $ptype->id }}">{{ $ptype->price_type }}</option>
+                @endforeach
+              </select>
+              <div class="mb-3 w-50">
+                    <label for="active_date" class="form-label">Price Active Date</label>
+                    <input type="date" class="form-control" name="active_date" id="active_date" placeholder="Product Price Active Date"
+                        value="{{ old('active_date') }}" required>
+             </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Add New Product</button>
             </div>

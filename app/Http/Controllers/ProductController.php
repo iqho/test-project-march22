@@ -7,6 +7,8 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\PriceType;
+use App\Models\ProductPrice;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\QueryException;
 
@@ -15,24 +17,24 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = Product::orderBy('id', 'asc')->get();
+        $products = Product::orderBy('id', 'ASC')->with('price_info')->get();
 
         return view('product.index', compact('products'));
     }
 
     public function create()
     {
-        $categories = Category::Orderby('id', 'desc')->get(['id', 'name']);
+        $categories = Category::Orderby('id', 'ASC')->get(['id', 'name']);
+        $price_types = PriceType::Orderby('id', 'ASC')->get(['id', 'price_type']);
 
-        return view('product.create', compact('categories'));
+        return view('product.create', compact('categories', 'price_types'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|max:255|unique:table,column,except,id',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'required',
+            'title' => 'required|max:255',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'category_id' => 'required|integer',
         ]);
 
@@ -46,10 +48,17 @@ class ProductController extends Controller
             if ($image) {
                 $imageName = date("dmYhis").'.'.$image->getClientOriginalExtension();
                 $image->move(public_path('product-images'), $imageName);
+                $product->image = $imageName;
             }
-            $product->image = $imageName;
-
             $product->save();
+
+            $price_info = new ProductPrice;
+            $price_info->product_id = $product->id;
+            $price_info->price_type_id = $request->price_type;
+            $price_info->price = $request->price;
+            $price_info->active_date = $request->active_date;
+            $price_info->save();
+            
         //}
 
         // catch (QueryException $e){
@@ -84,8 +93,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'title' => 'required|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'category_id' => 'required|integer'
         ]);
 
