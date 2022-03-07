@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\File;
 class ProductController extends Controller
 {
 
+    // try-catch                ; for any single crud or other type of action
+    // DB::transaction()        ; when we use save/update in more than one table
+
     public function index()
     {
         $products = Product::orderBy('id', 'asc')->get();
@@ -26,44 +29,51 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        // form data validation
         $request->validate([
             'title' => 'required|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'required',
             'category_id' => 'required|integer',
         ]);
+
+        // unique field validation
+        //$check_product = Product::where('title', '=', $request->title)->exists();
+        //$check_cat = Product::where('title', '=', $request->title)->where('category_id', '=', $request->category_id)->exists();
+        // if ($check_product == true && $check_cat == true) {
+        //     return redirect()->back()->withErrors('Title and Category are Same not Allow');
+        // }
+
+        // creating a product instance
         $product = new Product;
-        $check_product = Product::where('title', '=', $request->title)->exists();
-        $check_cat = Product::where('title', '=', $request->title)->where('category_id', '=', $request->category_id)->exists();
+
+        // assigning form data to the product instance
+        
         $product->title = $request->title;
         $product->description = $request->description;
         $product->is_active = $request->is_active ? $request->is_active : 0;
         $product->category_id = $request->category_id;
+        
         $image = $request->file('image');
         if ($image) {
             $imageName = date("dmYhis").'.'.$image->getClientOriginalExtension();
             $image->move(public_path('product-images'), $imageName);
+            $product->image = $imageName;
         }
-        $product->image = $imageName;
 
-        if($check_product == true && $check_cat == true){
-            return redirect()->back()->withErrors('Title and Category are Same not Allow');
-        }
-        else{
-            $product->save();
-        }
+        $product->save();
 
         return redirect(route('products.index'))->with('success', 'Product Created Successfully.');
     }
 
-    public function edit($id)
+    public function edit(Product $product)
     {
-      $product = Product::findOrFail($id);
+      // $product = Product::findOrFail($id);
       $categories = Category::Orderby('id', 'desc')->get();
       return view('product.edit', compact('product', 'categories'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
         $request->validate([
             'title' => 'required|max:255',
@@ -71,34 +81,44 @@ class ProductController extends Controller
             'description' => 'required',
             'category_id' => 'required|integer'
         ]);
-        $product = Product::findOrFail($id);
-        $product->title = $request->title;
-        $product->description = $request->description;
-        $product->is_active = $request->is_active ? $request->is_active : 0;
-        $product->category_id = $request->category_id;
-        $image = $request->file('image');
-        if ($image) {
-            if($product->image !== null){
-                File::delete([public_path('product-images/'. $product->image)]);
+
+        //$product = Product::findOrFail($id);
+        try {
+            $product->title = $request->title;
+            $product->description = $request->description;
+            $product->is_active = $request->is_active ? $request->is_active : 0;
+            $product->category_id = $request->category_id;
+            $image = $request->file('image');
+
+            if ($image) {
+                // delete current image
+
+                $imageName = date("dmYhis") . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('product-images'), $imageName);
+
+                if ($product->image !== null) {
+                    File::delete([public_path('product-images/' . $product->image)]);
+                    // unlink(public_path('product-images/'. $product->image);
+                }
+
+                $product->image = $imageName;
             }
-            $imageName = date("dmYhis").'.'.$image->getClientOriginalExtension();
-            $image->move(public_path('product-images'), $imageName);
-        }
-        else{
-            $imageName = $product->image;
-        }
 
-        $product->image = $imageName;
-
-        $check_product = Product::where('title', '=', $request->title)->where('id','!=', $id)->exists();
-        $check_cat = Product::where('title', '=', $request->title)->where('category_id', '=', $request->category_id)->where('id','!=', $id)->exists();
-
-        if($check_product == true && $check_cat == true){
-            return redirect()->back()->withErrors('Title and Category are same not allow');
-        }
-        else{
             $product->update();
+
+        }catch(Exception $e) {
+            return back()->withErrors($e->message());
         }
+        
+
+        // $check_product = Product::where('title', '=', $request->title)->where('id','!=', $id)->exists();
+        // $check_cat = Product::where('title', '=', $request->title)->where('category_id', '=', $request->category_id)->where('id','!=', $id)->exists();
+
+        // if($check_product == true && $check_cat == true){
+        //     return redirect()->back()->withErrors('Title and Category are same not allow');
+        // }
+        // else{
+        // }
 
         return redirect(route('products.index'))->with('success', 'Product Updated Successfully.');
     }
