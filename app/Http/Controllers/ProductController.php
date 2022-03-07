@@ -27,26 +27,33 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|max:255|unique:products',
+            'title' => 'required|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'required',
             'category_id' => 'required|integer',
         ]);
         $product = new Product;
+        $check_product = Product::where('title', '=', $request->title)->exists();
+        $check_cat = Product::where('title', '=', $request->title)->where('category_id', '=', $request->category_id)->exists();
         $product->title = $request->title;
         $product->description = $request->description;
         $product->is_active = $request->is_active ? $request->is_active : 0;
         $product->category_id = $request->category_id;
         $image = $request->file('image');
         if ($image) {
-            $slug = Str::slug($request->title);
-            $imageName = $slug.'.'.$image->getClientOriginalExtension();
+            $imageName = date("dmYhis").'.'.$image->getClientOriginalExtension();
             $image->move(public_path('product-images'), $imageName);
         }
         $product->image = $imageName;
-        $product->save();
 
-        return redirect(route('products.index'))->with('success', 'Product Created Successfully.');;
+        if($check_product == true && $check_cat == true){
+            return redirect()->back()->withErrors('Title and Category are Same not Allow');
+        }
+        else{
+            $product->save();
+        }
+
+        return redirect(route('products.index'))->with('success', 'Product Created Successfully.');
     }
 
     public function edit($id)
@@ -59,7 +66,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'title' => 'required|max:255|unique:products,title,'.$id,
+            'title' => 'required|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'required',
             'category_id' => 'required|integer'
@@ -74,8 +81,7 @@ class ProductController extends Controller
             if($product->image !== null){
                 File::delete([public_path('product-images/'. $product->image)]);
             }
-            $slug = Str::slug($request->title);
-            $imageName = $slug.'.'.$image->getClientOriginalExtension();
+            $imageName = date("dmYhis").'.'.$image->getClientOriginalExtension();
             $image->move(public_path('product-images'), $imageName);
         }
         else{
@@ -83,7 +89,16 @@ class ProductController extends Controller
         }
 
         $product->image = $imageName;
-        $product->update();
+
+        $check_product = Product::where('title', '=', $request->title)->where('id','!=', $id)->exists();
+        $check_cat = Product::where('title', '=', $request->title)->where('category_id', '=', $request->category_id)->where('id','!=', $id)->exists();
+
+        if($check_product == true && $check_cat == true){
+            return redirect()->back()->withErrors('Title and Category are same not allow');
+        }
+        else{
+            $product->update();
+        }
 
         return redirect(route('products.index'))->with('success', 'Product Updated Successfully.');
     }
