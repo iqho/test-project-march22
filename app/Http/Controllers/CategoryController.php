@@ -11,7 +11,7 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = Category::orderBy('id', 'asc')->get();
+        $categories = Category::orderBy('id', 'ASC')->get(['id','name']);
         return view('category.index', compact('categories'));
     }
 
@@ -25,33 +25,37 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|max:255|unique:categories'
         ]);
+
         $category = new Category;
         $category->name = $request->name;
+
         $category->save();
+
         return redirect(route('categories.index'))->with('success', 'Category Created Successfully.');;
     }
 
-    public function edit($id)
+    public function edit(Category $category)
     {
-      $category = Category::findOrFail($id);
       return view('category.edit', compact('category'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
         $request->validate([
-            'name' => 'required|max:255|unique:categories,name,'.$id
+            'name' => 'required|max:255|unique:categories,name,'.$request->id
         ]);
-        $category = Category::findOrFail($id);
+
         $category->name = $request->name;
         $category->update();
+
         return redirect(route('categories.index'))->with('success', 'Category Updated Successfully.');
     }
 
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        $category = Category::findOrFail($id);
+
         $category->delete();
+
         return redirect(route('categories.index'))->with('success', 'Category Deleted Successfully.');
     }
 }

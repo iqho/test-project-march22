@@ -24,11 +24,10 @@ class CreateProductsTable extends Migration
             $table->boolean('is_active')->default(1);
             $table->timestamps();
 
-
             $table->foreign('category_id')->references('id')->on('categories')->onUpdate('cascade')
             ->onDelete('restrict');
 
-            $table->unique(['category_id', 'name'], 'unique_identifier');
+            $table->unique(['category_id', 'title'], 'unique_identifier');
         });
     }
 
