@@ -17,7 +17,7 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = Product::orderBy('id', 'ASC')->with('price_info')->get();
+        $products = Product::orderBy('id', 'ASC')->get();
 
         return view('product.index', compact('products'));
     }
@@ -58,7 +58,7 @@ class ProductController extends Controller
             $price_info->price = $request->price;
             $price_info->active_date = $request->active_date;
             $price_info->save();
-            
+
         //}
 
         // catch (QueryException $e){

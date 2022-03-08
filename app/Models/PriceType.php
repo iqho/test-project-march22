@@ -10,4 +10,10 @@ class PriceType extends Model
     use HasFactory;
 
     protected $fillable = ['price_type'];
+
+    public function priceType()
+    {
+        return $this->belongsTo(ProductPrice::class);
+    }
+
 }

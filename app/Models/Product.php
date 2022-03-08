@@ -18,10 +18,14 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function price_info()
+    public function productPrices()
     {
-        return $this->hasMany(ProductPrice::class, 'product_id');
+        return $this->hasMany(ProductPrice::class);
     }
 
-    
+    public function productPrice($price_type_id = 1) {
+        $today = date('Y-m-d H:i:s');
+        //return $this->productPrices()->where('active_date','>=', $today)->where('price_type_id', $price_type_id)->first()->price;
+       return dd($this->productPrices());
+    }
 }
