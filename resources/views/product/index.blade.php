@@ -50,40 +50,48 @@
               </td>
               <td class="align-middle">
                   @foreach ($product->productPrices as $row)
-                  {{ $row->priceType->price_type }}: {{ $row->price }} , Active From: {{ date('d F Y', strtotime($row->active_date)) }}
+                  {{ $row->priceType->price_type }}: {{ $row->price }} <br> Active From: {{ date('d F Y', strtotime($row->active_date)) }}
                   <hr class="g-0">
                   @endforeach
                 </td>
               <td class="align-middle">
+                  
+                    @php
+                        $curDate = date('Y-m-d');
+                    @endphp
 
-                {{ $product->productPrice() }}
-
-              </td>
-              <td class="align-middle text-center">
-                    @if ($product->is_active == 1)
-                        <button class="btn btn-success">Active</button>
+                    @if (($product->wholeSalePrice()->active_date) <= $curDate)
+                    {{ $product->wholeSalePrice()->price }}
                     @else
-                        <button class="btn btn-danger">Inactive</button>
+                    {{ $product->retailPrice()->price }}
                     @endif
-              </td>
-              <td class="align-middle text-center">
-                  @if ($product->category->name)
-                    {{ $product->category->name }}
-                    @else
-                    <h5>No Category Found</h5>
-                  @endif
 
                 </td>
-              <td class="align-middle text-center">
-                <div class="btn-group" role="group">
-                <a class="btn btn-primary me-1" href="{{ route('products.edit', $product->id) }}">Edit</a>
-                <form action="{{ route('products.destroy', $product->id) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" onclick="return confirm('Are you sure ?')" class="btn btn-danger btn-block">Delete</button>
-                </form>
-                </div>
-            </td>
+                <td class="align-middle text-center">
+                        @if ($product->is_active == 1)
+                            <button class="btn btn-success">Active</button>
+                        @else
+                            <button class="btn btn-danger">Inactive</button>
+                        @endif
+                </td>
+                <td class="align-middle text-center">
+                    @if ($product->category->name)
+                        {{ $product->category->name }}
+                        @else
+                        <h5>No Category Found</h5>
+                    @endif
+
+                    </td>
+                <td class="align-middle text-center">
+                    <div class="btn-group" role="group">
+                    <a class="btn btn-primary me-1" href="{{ route('products.edit', $product->id) }}">Edit</a>
+                    <form action="{{ route('products.destroy', $product->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" onclick="return confirm('Are you sure ?')" class="btn btn-danger btn-block">Delete</button>
+                    </form>
+                    </div>
+                </td>
             </tr>
             @endforeach
           </tbody>

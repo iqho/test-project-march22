@@ -15,12 +15,12 @@ class CreateProductPricesTable extends Migration
     {
         Schema::create('product_prices', function (Blueprint $table) {
             $table->id();
-            
+
             $table->bigInteger('product_id')->unsigned()->nullable();
             $table->bigInteger('price_type_id')->unsigned()->nullable();
-            
+
             $table->decimal('price')->nullable();
-            $table->timestamp('active_date')->useCurrent();
+            $table->date('active_date');
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products')->onUpdate('cascade')
@@ -28,7 +28,7 @@ class CreateProductPricesTable extends Migration
             $table->foreign('price_type_id')->references('id')->on('price_types')->onUpdate('cascade')
             ->onDelete('cascade');
 
-            
+
         });
     }
 
