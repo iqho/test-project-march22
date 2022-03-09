@@ -41,23 +41,21 @@
                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach
               </select>
-            <div class="mb-3 w-50">
-                <label for="price" class="form-label">Product Price</label>
-                <input type="number" class="form-control" name="price" id="price" placeholder="Product Price"
-                    value="{{ old('price') }}" required>
-            </div>
-            <label for="price_type" class="form-label">Product Price Type</label>
-            <select class="form-select mb-3" id="price_type" name="price_type" required>
-                <option selected>Select Product Price Type</option>
-                @foreach ($price_types as $ptype)
-                <option value="{{ $ptype->id }}">{{ $ptype->price_type }}</option>
-                @endforeach
-              </select>
-              <div class="mb-3 w-50">
-                    <label for="active_date" class="form-label">Price Active Date</label>
-                    <input type="date" class="form-control" name="active_date" id="active_date" placeholder="Product Price Active Date"
-                        value="{{ old('active_date') }}" required>
-             </div>
+              <div class="row mb-3">
+                    <div class="col-4">
+                        <label for="regular_price" class="form-label">Regular Price</label>
+                        <input type="number" class="form-control" name="regular_price" id="regular_price" placeholder="Regular Price"
+                            value="{{ old('regular_price') }}" required>
+                    </div>
+                    <div class="col-4">
+                        <label for="wholesale_price" class="form-label">Wholesale Price ( Optional )</label>
+                        <input type="number" class="form-control" name="wholesale_price" id="wholesale_price" placeholder="Wholesale Price">
+                    </div>
+                    <div class="col-4">
+                        <label for="active_date" class="form-label">Offer Price Start From ( Optional )</label>
+                        <input type="date" class="form-control" name="wholesale_active_date" value="{{ date('Y-m-d') }}" id="wholesale_active_date">
+                    </div>
+                </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Add New Product</button>
             </div>

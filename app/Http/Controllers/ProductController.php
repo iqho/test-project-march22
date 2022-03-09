@@ -54,10 +54,19 @@ class ProductController extends Controller
 
             $price_info = new ProductPrice;
             $price_info->product_id = $product->id;
-            $price_info->price_type_id = $request->price_type;
-            $price_info->price = $request->price;
-            $price_info->active_date = $request->active_date;
+            $price_info->price = $request->regular_price;
+            $price_info->price_type_id = 1;
+            $price_info->active_date = date('Y-m-d');
             $price_info->save();
+
+            if(!empty($request->wholesale_price)){
+                $price_info2 = new ProductPrice;
+                $price_info2->product_id = $product->id;
+                $price_info2->price = $request->wholesale_price;
+                $price_info2->price_type_id = 2;
+                $price_info2->active_date = $request->wholesale_active_date;;
+                $price_info2->save();
+            }
 
         //}
 

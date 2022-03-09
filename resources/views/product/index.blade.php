@@ -55,17 +55,14 @@
                   @endforeach
                 </td>
               <td class="align-middle">
-                  
                     @php
                         $curDate = date('Y-m-d');
                     @endphp
-
-                    @if (($product->wholeSalePrice()->active_date) <= $curDate)
+                    @if ($product->wholeSalePrice() && ($product->wholeSalePrice()->active_date) <= $curDate)
                     {{ $product->wholeSalePrice()->price }}
                     @else
                     {{ $product->retailPrice()->price }}
                     @endif
-
                 </td>
                 <td class="align-middle text-center">
                         @if ($product->is_active == 1)
