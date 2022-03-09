@@ -21,11 +21,11 @@
             </div>
             <div class="mb-3 w-50">
                 <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" name="description" id="description" rows="3" required>{{ old('description') }}</textarea>
+                <textarea class="form-control" name="description" id="description" rows="3">{{ old('description') }}</textarea>
             </div>
             <div class="mb-3 w-50">
                 <label for="image" class="form-label">Product Image</label>
-                <input class="form-control" type="file" id="image" name="image" required>
+                <input class="form-control" type="file" id="image" name="image">
             </div>
             <div class="col-md-12 mb-2">
                 <img id="preview-image-before-upload" src="{{ asset('assets/images/image-not-available.jpg') }}"
@@ -41,6 +41,21 @@
                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach
               </select>
+              <div class="row mb-3">
+                    <div class="col-4">
+                        <label for="regular_price" class="form-label">Regular Price</label>
+                        <input type="number" class="form-control" name="regular_price" id="regular_price" placeholder="Regular Price"
+                            value="{{ old('regular_price') }}" required>
+                    </div>
+                    <div class="col-4">
+                        <label for="wholesale_price" class="form-label">Wholesale Price ( Optional )</label>
+                        <input type="number" class="form-control" name="wholesale_price" id="wholesale_price" placeholder="Wholesale Price">
+                    </div>
+                    <div class="col-4">
+                        <label for="active_date" class="form-label">Offer Price Start From ( Optional )</label>
+                        <input type="date" class="form-control" name="wholesale_active_date" value="{{ date('Y-m-d') }}" id="wholesale_active_date">
+                    </div>
+                </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Add New Product</button>
             </div>

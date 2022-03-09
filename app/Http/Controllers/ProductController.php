@@ -7,7 +7,10 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\PriceType;
+use App\Models\ProductPrice;
 use Illuminate\Support\Facades\File;
+use Illuminate\Database\QueryException;
 
 class ProductController extends Controller
 {
@@ -17,14 +20,17 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = Product::orderBy('id', 'asc')->get();
+        $products = Product::orderBy('id', 'ASC')->get();
+
         return view('product.index', compact('products'));
     }
 
     public function create()
     {
-        $categories = Category::Orderby('id', 'desc')->get();
-        return view('product.create', compact('categories'));
+        $categories = Category::Orderby('id', 'ASC')->get(['id', 'name']);
+        $price_types = PriceType::Orderby('id', 'ASC')->get(['id', 'price_type']);
+
+        return view('product.create', compact('categories', 'price_types'));
     }
 
     public function store(Request $request)
@@ -32,44 +38,67 @@ class ProductController extends Controller
         // form data validation
         $request->validate([
             'title' => 'required|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'category_id' => 'required|integer',
         ]);
 
-        // unique field validation
-        //$check_product = Product::where('title', '=', $request->title)->exists();
-        //$check_cat = Product::where('title', '=', $request->title)->where('category_id', '=', $request->category_id)->exists();
-        // if ($check_product == true && $check_cat == true) {
-        //     return redirect()->back()->withErrors('Title and Category are Same not Allow');
+        //try{
+            $product = new Product;
+            $product->title = $request->title;
+            $product->description = $request->description;
+            $product->is_active = $request->is_active ? $request->is_active : 0;
+            $product->category_id = $request->category_id;
+            $image = $request->file('image');
+            if ($image) {
+                $imageName = date("dmYhis").'.'.$image->getClientOriginalExtension();
+                $image->move(public_path('product-images'), $imageName);
+                $product->image = $imageName;
+            }
+            $product->save();
+
+            $price_info = new ProductPrice;
+            $price_info->product_id = $product->id;
+            $price_info->price = $request->regular_price;
+            $price_info->price_type_id = 1;
+            $price_info->active_date = date('Y-m-d');
+            $price_info->save();
+
+            if(!empty($request->wholesale_price)){
+                $price_info2 = new ProductPrice;
+                $price_info2->product_id = $product->id;
+                $price_info2->price = $request->wholesale_price;
+                $price_info2->price_type_id = 2;
+                $price_info2->active_date = $request->wholesale_active_date;;
+                $price_info2->save();
+            }
+
+        //}
+
+        // catch (QueryException $e){
+        //     $errorCode = $e->errorInfo[1];
+        //     // if($errorCode == 1062){
+        //     //     return redirect()->back()->withErrors('Title and Category are Same not Allow');
+        //     // }
+        //     switch ($errorCode) {
+        //         case 1062://code dublicate entry
+        //             return redirect()->back()->withErrors('Title and Category are Same not Allow');
+        //             break;
+        //         case 1364:
+        //             return redirect()->back()->withErrors($e);
+        //             break;
+        //     }
+
         // }
 
-        // creating a product instance
-        $product = new Product;
 
-        // assigning form data to the product instance
-        
-        $product->title = $request->title;
-        $product->description = $request->description;
-        $product->is_active = $request->is_active ? $request->is_active : 0;
-        $product->category_id = $request->category_id;
-        
-        $image = $request->file('image');
-        if ($image) {
-            $imageName = date("dmYhis").'.'.$image->getClientOriginalExtension();
-            $image->move(public_path('product-images'), $imageName);
-            $product->image = $imageName;
-        }
-
-        $product->save();
-
-        return redirect(route('products.index'))->with('success', 'Product Created Successfully.');
+        return redirect()->route('products.index')->with('success', 'Product Created Successfully.');
     }
 
     public function edit(Product $product)
     {
-      // $product = Product::findOrFail($id);
-      $categories = Category::Orderby('id', 'desc')->get();
+
+      $categories = Category::Orderby('id', 'desc')->get(['id', 'name']);
+
       return view('product.edit', compact('product', 'categories'));
     }
 
@@ -77,57 +106,36 @@ class ProductController extends Controller
     {
         $request->validate([
             'title' => 'required|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'category_id' => 'required|integer'
         ]);
 
-        //$product = Product::findOrFail($id);
-        try {
-            $product->title = $request->title;
-            $product->description = $request->description;
-            $product->is_active = $request->is_active ? $request->is_active : 0;
-            $product->category_id = $request->category_id;
-            $image = $request->file('image');
+        $product->title = $request->title;
+        $product->description = $request->description;
+        $product->is_active = $request->is_active ? $request->is_active : 0;
+        $product->category_id = $request->category_id;
+        $image = $request->file('image');
 
-            if ($image) {
-                // delete current image
-
-                $imageName = date("dmYhis") . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('product-images'), $imageName);
-
-                if ($product->image !== null) {
-                    File::delete([public_path('product-images/' . $product->image)]);
-                    // unlink(public_path('product-images/'. $product->image);
-                }
-
-                $product->image = $imageName;
+        if ($image) {
+            $imageName = date("dmYhis").'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('product-images'), $imageName);
+            if($product->image !== null){
+                File::delete([public_path('product-images/'. $product->image)]);
             }
+            $product->image = $imageName;
+        }
 
             $product->update();
 
-        }catch(Exception $e) {
-            return back()->withErrors($e->message());
-        }
-        
-
-        // $check_product = Product::where('title', '=', $request->title)->where('id','!=', $id)->exists();
-        // $check_cat = Product::where('title', '=', $request->title)->where('category_id', '=', $request->category_id)->where('id','!=', $id)->exists();
-
-        // if($check_product == true && $check_cat == true){
-        //     return redirect()->back()->withErrors('Title and Category are same not allow');
-        // }
-        // else{
-        // }
-
-        return redirect(route('products.index'))->with('success', 'Product Updated Successfully.');
+        return redirect()->route('products.index')->with('success', 'Product Updated Successfully.');
     }
 
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        $product = Product::findOrFail($id);
         File::delete([public_path('product-images/'. $product->image)]);
+
         $product->delete();
-        return redirect(route('products.index'))->with('success', 'Product Deleted Successfully.');
+
+        return redirect()->route('products.index')->with('success', 'Product Deleted Successfully.');
     }
 }
