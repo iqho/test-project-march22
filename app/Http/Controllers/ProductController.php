@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\PriceType;
 use App\Models\ProductPrice;
 use Illuminate\Support\Facades\File;
-use Illuminate\Database\QueryException;
 
 class ProductController extends Controller
 {
@@ -22,7 +20,7 @@ class ProductController extends Controller
     {
         $products = Product::orderBy('id', 'ASC')->get();
 
-        return view('product.index', compact('products'));
+        return view('products.index', compact('products'));
     }
 
     public function create()
@@ -30,7 +28,7 @@ class ProductController extends Controller
         $categories = Category::Orderby('id', 'ASC')->get(['id', 'name']);
         $price_types = PriceType::Orderby('id', 'ASC')->get(['id', 'price_type']);
 
-        return view('product.create', compact('categories', 'price_types'));
+        return view('products.create', compact('categories', 'price_types'));
     }
 
     public function store(Request $request)
@@ -39,10 +37,9 @@ class ProductController extends Controller
         $request->validate([
             'title' => 'required|max:255',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'category_id' => 'required|integer',
+            'category_id' => 'nullable',
         ]);
 
-        //try{
             $product = new Product;
             $product->title = $request->title;
             $product->description = $request->description;
@@ -72,25 +69,6 @@ class ProductController extends Controller
                 $price_info2->save();
             }
 
-        //}
-
-        // catch (QueryException $e){
-        //     $errorCode = $e->errorInfo[1];
-        //     // if($errorCode == 1062){
-        //     //     return redirect()->back()->withErrors('Title and Category are Same not Allow');
-        //     // }
-        //     switch ($errorCode) {
-        //         case 1062://code dublicate entry
-        //             return redirect()->back()->withErrors('Title and Category are Same not Allow');
-        //             break;
-        //         case 1364:
-        //             return redirect()->back()->withErrors($e);
-        //             break;
-        //     }
-
-        // }
-
-
         return redirect()->route('products.index')->with('success', 'Product Created Successfully.');
     }
 
@@ -99,7 +77,7 @@ class ProductController extends Controller
 
       $categories = Category::Orderby('id', 'desc')->get(['id', 'name']);
 
-      return view('product.edit', compact('product', 'categories'));
+      return view('products.edit', compact('product', 'categories'));
     }
 
     public function update(Request $request, Product $product)
@@ -125,17 +103,27 @@ class ProductController extends Controller
             $product->image = $imageName;
         }
 
-            $product->update();
+        $product->update();
 
         return redirect()->route('products.index')->with('success', 'Product Updated Successfully.');
     }
 
     public function destroy(Product $product)
     {
-        File::delete([public_path('product-images/'. $product->image)]);
-
         $product->delete();
+
+        File::delete([public_path('product-images/'. $product->image)]);
 
         return redirect()->route('products.index')->with('success', 'Product Deleted Successfully.');
     }
+
+    public function ChangeStatus(Request $request)
+    {
+        $product = Product::find($request->product_id);
+        $product->is_active = $request->status;
+        $product->save();
+
+        return response()->json(['success'=>'Product Active Status Change Successfully.']);
+    }
+
 }

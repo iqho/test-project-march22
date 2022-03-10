@@ -12,7 +12,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::orderBy('id', 'ASC')->get(['id','name']);
-        return view('category.index', compact('categories'));
+        return view('categories.index', compact('categories'));
     }
 
     public function create()
@@ -32,12 +32,12 @@ class CategoryController extends Controller
 
         $category->save();
 
-        return redirect(route('categories.index'))->with('success', 'Category Created Successfully.');;
+        return redirect()->route('categories.index')->with('success', 'Category Created Successfully.');;
     }
 
     public function edit(Category $category)
     {
-      return view('category.edit', compact('category'));
+      return view('categories.edit', compact('category'));
     }
 
     public function update(Request $request, Category $category)
@@ -49,7 +49,7 @@ class CategoryController extends Controller
         $category->name = $request->name;
         $category->update();
 
-        return redirect(route('categories.index'))->with('success', 'Category Updated Successfully.');
+        return redirect()->route('categories.index')->with('success', 'Category Updated Successfully.');
     }
 
     public function destroy(Category $category)
@@ -57,6 +57,6 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        return redirect(route('categories.index'))->with('success', 'Category Deleted Successfully.');
+        return redirect()->route('categories.index')->with('success', 'Category Deleted Successfully.');
     }
 }

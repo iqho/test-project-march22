@@ -9,5 +9,10 @@ Route::get('/', function () {
 });
 
 Route::resource('categories', CategoryController::class);
+
+
+Route::get('products/change-status', [ProductController::class, 'ChangeStatus'])->name('product.changeStatus');
 Route::resource('products', ProductController::class);
+
+
 
