@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\PriceType;
 use App\Models\ProductPrice;
 use Illuminate\Support\Facades\File;
+use Illuminate\Database\QueryException;
 
 class ProductController extends Controller
 {
@@ -25,7 +26,7 @@ class ProductController extends Controller
 
     public function create()
     {
-        $categories = Category::Orderby('id', 'ASC')->get(['id', 'name']);
+        $categories = Category::Orderby('id', 'DESC')->get(['id', 'name']);
         $price_types = PriceType::Orderby('id', 'ASC')->get(['id', 'price_type']);
 
         return view('products.create', compact('categories', 'price_types'));
@@ -40,11 +41,16 @@ class ProductController extends Controller
             'category_id' => 'nullable',
         ]);
 
+        try{
+            // creating a product instance
             $product = new Product;
+
+            // assigning form data to the product instance
             $product->title = $request->title;
             $product->description = $request->description;
             $product->is_active = $request->is_active ? $request->is_active : 0;
             $product->category_id = $request->category_id;
+
             $image = $request->file('image');
             if ($image) {
                 $imageName = date("dmYhis").'.'.$image->getClientOriginalExtension();
@@ -68,6 +74,12 @@ class ProductController extends Controller
                 $price_info2->active_date = $request->wholesale_active_date;;
                 $price_info2->save();
             }
+        } catch (QueryException $e){
+            $errorCode = $e->errorInfo[1];
+            if($errorCode == 1062){
+                return redirect()->back()->withErrors('error','Title and Category Already Exits');
+            }
+        }
 
         return redirect()->route('products.index')->with('success', 'Product Created Successfully.');
     }
@@ -75,7 +87,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
 
-      $categories = Category::Orderby('id', 'desc')->get(['id', 'name']);
+      $categories = Category::Orderby('id', 'DESC')->get(['id', 'name']);
 
       return view('products.edit', compact('product', 'categories'));
     }
@@ -85,13 +97,14 @@ class ProductController extends Controller
         $request->validate([
             'title' => 'required|max:255',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'category_id' => 'required|integer'
+            'category_id' => 'nullable',
         ]);
 
         $product->title = $request->title;
         $product->description = $request->description;
         $product->is_active = $request->is_active ? $request->is_active : 0;
         $product->category_id = $request->category_id;
+
         $image = $request->file('image');
 
         if ($image) {

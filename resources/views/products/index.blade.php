@@ -40,23 +40,27 @@
                         <td class="align-middle">{{ $product->title }}</td>
                         <td class="align-middle">
                             @if ($product->image)
-                            {{ $product->description }}
+                                {{ $product->description }}
                             @else
-                            No Description
+                                <small> No Description </small>
                             @endif
                         </td>
                         <td class="align-middle text-center">
                             @if ($product->image)
                             <img src="{{ asset('product-images/'.$product->image) }}" alt="{{ $product->title }}" height="40" width="45">
                             @else
-                            No Image
+                            <small> No Image </small>
                             @endif
                         </td>
                         <td class="align-middle">
                             @foreach ($product->productPrices as $row)
-                            <strong> {{ $row->priceType->price_type }}: {{ $row->price }}</strong><br>
-                            <small> Active From: {{ date('d F Y', strtotime($row->active_date)) }} </small>
-                            <hr class="g-0">
+                                @if ($row->price)
+                                    <strong> {{ $row->priceType->price_type }}: {{ $row->price }}</strong><br>
+                                    <small> Active From: {{ date('d F Y', strtotime($row->active_date)) }} </small>
+                                    <hr class="g-0">
+                                @else
+                                <small>No Price</small>
+                                @endif
                             @endforeach
                         </td>
                         <td class="align-middle text-center">
@@ -67,7 +71,7 @@
                             @if ($product->category)
                             {{ $product->category->name }}
                             @else
-                            <p>No Category</p>
+                            <small>No Category</small>
                             @endif
 
                         </td>
@@ -77,7 +81,7 @@
                                 <form action="{{ route('products.destroy', $product->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Are you sure ?')" class="btn btn-danger btn-block">Delete</button>
+                                    <button type="submit" onclick="return confirm('Are you sure want to delete this product ?')" class="btn btn-danger btn-block">Delete</button>
                                 </form>
                             </div>
                         </td>
