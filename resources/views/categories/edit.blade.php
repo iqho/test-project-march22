@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Update Category | Test Project March 2022')
 @section('content')
-<div class="row g-0 w-50">
+<div class="row g-0 w-100 w-lg-50">
     <div class="col-12 my-2"><h2>Update Category</h1></div>
         @if ($errors->any())
             <div class="alert alert-danger p-1 m-0">

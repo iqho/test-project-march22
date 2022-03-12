@@ -3,7 +3,7 @@
 @section('title', 'Update Product | Test Project March 2022')
 
 @section('content')
-<div class="card mt-2 w-75">
+<div class="card mt-2 w-100 w-lg-75">
 
     <div class="card-header"><h2>Update Product</h1></div>
 

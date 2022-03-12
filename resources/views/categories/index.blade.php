@@ -3,7 +3,7 @@
 @section('title', 'All Categories | Test Project March 2022')
 
 @section('content')
-    <div class="card w-50 mt-2">
+    <div class="card mt-2 w-100 w-lg-50">
         <div class="card-header"><h3>All Categories</h3></div>
 
         @if ($message = Session::get('success'))
@@ -22,7 +22,7 @@
                         <tr>
                             <th>#</th>
                             <th>Category Name</th>
-                            <th style="text-align:center">Action</th>
+                            <th style="text-align:right; padding-right:50px">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,7 +33,7 @@
                         <tr>
                             <td class="align-middle">{{ $i++ }}</td>
                             <td class="align-middle">{{ $category->name }}</td>
-                            <td style="max-width: 150px; text-align:center">
+                            <td style="max-width: 150px; text-align:right">
                                 <div class="btn-group" role="group">
                                     <a class="btn btn-primary me-1" href="{{ route('categories.edit', $category->id) }}">Edit</a>
 

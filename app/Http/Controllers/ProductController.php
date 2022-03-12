@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\PriceType;
 use App\Models\ProductPrice;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Session;
 
 class ProductController extends Controller
 {
@@ -77,7 +78,10 @@ class ProductController extends Controller
         } catch (QueryException $e){
             $errorCode = $e->errorInfo[1];
             if($errorCode == 1062){
-                return redirect()->back()->withErrors('error','Title and Category Already Exits');
+              return redirect()->back()->withErrors(['msg' => 'This product name already exits under selected category']);
+            }
+            else{
+                return redirect()->back()->withErrors(['msg' => 'Unable to process request.Error:' . json_encode($e->getMessage(), true)]);
             }
         }
 
@@ -110,9 +114,11 @@ class ProductController extends Controller
         if ($image) {
             $imageName = date("dmYhis").'.'.$image->getClientOriginalExtension();
             $image->move(public_path('product-images'), $imageName);
+            
             if($product->image !== null){
                 File::delete([public_path('product-images/'. $product->image)]);
             }
+            
             $product->image = $imageName;
         }
 

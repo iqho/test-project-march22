@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <div class="card mt-2 w-50">
+    <div class="card mt-2 w-100 w-lg-50">
 
         <div class="card-header"><h3>Add New Category</h3></div>
 
