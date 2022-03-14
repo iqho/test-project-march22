@@ -7,7 +7,7 @@
         <div class="col-12"><h2>All Products</h1></div>
 
         @if ($message = Session::get('success'))
-        <div class="alert alert-success alert-dismissible fade show p-2 w-25 text-center" role="alert" id="success">
+        <div class="alert alert-success alert-dismissible fade show p-2 w-50 text-center" role="alert" id="success">
             <strong>{{ $message }}</strong>
             <button type="button" class="btn-close p-2" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>

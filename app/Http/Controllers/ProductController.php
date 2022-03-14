@@ -60,22 +60,26 @@ class ProductController extends Controller
             }
             $product->save();
 
-            $price_info = new ProductPrice;
-            $price_info->product_id = $product->id;
-            $price_info->price = $request->regular_price;
-            $price_info->price_type_id = 1;
-            $price_info->active_date = date('Y-m-d');
-            $price_info->save();
+            $getAllPrices = $request->price;
+            $price_type_id = $request->price_type_id;
+            $active_date = $request->active_date;
 
-            if(!empty($request->wholesale_price)){
-                $price_info2 = new ProductPrice;
-                $price_info2->product_id = $product->id;
-                $price_info2->price = $request->wholesale_price;
-                $price_info2->price_type_id = 2;
-                $price_info2->active_date = $request->wholesale_active_date;;
-                $price_info2->save();
+            $values = [];
+
+            foreach($getAllPrices as $index => $price){
+                $values[] = [
+                    'product_id' => $product->id,
+                    'price' => $price,
+                    'price_type_id' => $price_type_id[$index],
+                    'active_date' => $active_date[$index],
+                ];
             }
-        } catch (QueryException $e){
+
+            $product->productPrices()->insert($values);
+
+        } 
+        
+        catch (QueryException $e){
             $errorCode = $e->errorInfo[1];
             if($errorCode == 1062){
               return redirect()->back()->withErrors(['msg' => 'This product name already exits under selected category']);
@@ -90,10 +94,11 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
+        $categories = Category::Orderby('id', 'DESC')->get(['id', 'name']);
 
-      $categories = Category::Orderby('id', 'DESC')->get(['id', 'name']);
+        $price_types = PriceType::Orderby('id', 'ASC')->get(['id', 'price_type']);
 
-      return view('products.edit', compact('product', 'categories'));
+        return view('products.edit', compact('product', 'categories', 'price_types'));
     }
 
     public function update(Request $request, Product $product)

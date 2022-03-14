@@ -60,6 +60,29 @@
                     @endforeach
                 </select>
 
+                <div class="row mb-3">
+                    <div class="col-md-4 col-12">
+                        <label for="price_type_id" class="form-label">Product Price Type</label>
+                        <select class="form-select" name="price_type_id[]" id="price_type_id">
+                            <option value="" selected>Please Select Product Price Type</option>
+                            @foreach ($price_types as $ptype)
+                            <option value="{{ $ptype->id }}">{{ $ptype->price_type }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" min="0" class="form-control" name="price[]" id="price" placeholder="Price"
+                                value="{{ old('price[]') }}">
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <label for="active_date" class="form-label">Price Active From</label>
+                        <input type="date" class="form-control" name="active_date[]" value="{{ date('Y-m-d') }}"
+                            id="active_date">
+                    </div>
+                </div>
+
+
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary">Update Product</button>
                 </div>
