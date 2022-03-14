@@ -53,15 +53,15 @@
                             @endif
                         </td>
                         <td class="align-middle">
-                            @foreach ($product->productPrices as $row)
+                            @forelse ($product->productPrices as $row)
                                 @if ($row->price)
                                     <strong> {{ $row->priceType->price_type }}: {{ $row->price }}</strong><br>
                                     <small> Active From: {{ date('d F Y', strtotime($row->active_date)) }} </small>
-                                    <hr class="g-0">
-                                @else
-                                <small>No Price</small>
+                                    <hr class="g-0">                                
                                 @endif
-                            @endforeach
+                            @empty
+                            <small>No Price</small>
+                            @endforelse
                         </td>
                         <td class="align-middle text-center">
 

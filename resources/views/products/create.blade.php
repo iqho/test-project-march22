@@ -59,48 +59,68 @@
 
                 </select>
                 
-                <div class="row" id="prices">
-                    <div class="col-md-4 col-12">
+                <div class="row prices g-0">
+
+                    <div class="col-md-4 col-12 g-0" style="padding-right:5px!important">
                         <label for="price_type_id" class="form-label">Product Price Type</label>
+
                         <select class="form-select" name="price_type_id[]" id="price_type_id">
                             <option value="" selected>Please Select Product Price Type</option>
                             @foreach ($price_types as $ptype)
                             <option value="{{ $ptype->id }}">{{ $ptype->price_type }}</option>
                             @endforeach
                         </select>
+
                     </div>
-                    <div class="col-md-4 col-12">
+
+                    <div class="col-md-3 col-12 g-0" style="padding-right:5px!important">
                         <label for="price" class="form-label">Price</label>
                         <input type="number" min="0" class="form-control" name="price[]" id="price" placeholder="Price"
                                 value="{{ old('price[]') }}">
                     </div>
-                    <div class="col-md-4 col-12">
+
+                    <div class="col-md-4 col-12 g-0" style="padding-right:5px!important">
                         <label for="active_date" class="form-label">Price Active From</label>
                         <input type="date" class="form-control" name="active_date[]" value="{{ date('Y-m-d') }}"
                             id="active_date">
                     </div>
+
+                    <div class="col-md-1 col-12 d-flex align-items-end g-0">
+                        <a href="javascript:void(0)" class="btn btn-success addMore"><span class="glyphicon glyphicon glyphicon-plus"
+                                aria-hidden="true"></span> Add</a>
+                    </div>
+
                 </div>
-                
-                <div class="row" id="prices">
-                    <div class="col-md-4 col-12">
-                        <label for="price_type_id" class="form-label">Product Price Type</label>
+
+                {{-- For Add New Input Row --}}
+                <div class="row pricesCopy" style="display: none;">
+
+                    <div class="col-md-4 col-12 g-0" style="padding-right:5px!important">
+
                         <select class="form-select" name="price_type_id[]" id="price_type_id">
                             <option value="" selected>Please Select Product Price Type</option>
                             @foreach ($price_types as $ptype)
                             <option value="{{ $ptype->id }}">{{ $ptype->price_type }}</option>
                             @endforeach
                         </select>
+
                     </div>
-                    <div class="col-md-4 col-12">
-                        <label for="price" class="form-label">Price</label>
+
+                    <div class="col-md-3 col-12 g-0" style="padding-right:5px!important">
                         <input type="number" min="0" class="form-control" name="price[]" id="price" placeholder="Price"
                                 value="{{ old('price[]') }}">
                     </div>
-                    <div class="col-md-4 col-12">
-                        <label for="active_date" class="form-label">Price Active From</label>
+
+                    <div class="col-md-4 col-12 g-0" style="padding-right:5px!important">
                         <input type="date" class="form-control" name="active_date[]" value="{{ date('Y-m-d') }}"
                             id="active_date">
                     </div>
+
+                    <div class="col-md-1 col-12 d-flex align-items-end g-0">
+                        <a href="javascript:void(0)" class="btn btn-danger remove"><span class="glyphicon glyphicon glyphicon-remove"
+                                aria-hidden="true"></span> Remove</a>
+                    </div>
+
                 </div>
 
                 <div class="col-12 mb-2 mt-3">
@@ -111,10 +131,11 @@
 
         </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
     @push('scripts')
+
         <script type="text/javascript">
+
+            // Upload Image Preview
             $(document).ready(function (e) {
                 $('#image').change(function(){
                     let reader = new FileReader();
@@ -126,9 +147,25 @@
             });
 
             $(document).ready(function(){
+
+            // Hide Message After 5 Sec
             $("#successMessage").delay(5000).slideUp(300);
+            
+            //add more fields group
+            $(".addMore").click(function(){
+                    var fieldHTML='<div class="row prices g-0" style="margin-top:5px!important">'
+                    +$(".pricesCopy").html()+'</div>';
+                    $('body').find('.prices:last').after(fieldHTML);
+                });
+            
+            //remove fields group
+            $("body").on("click",".remove",function(){
+                    $(this).parents(".prices").remove();
+                });
             });
+
         </script>
+
     @endpush
 
 </div>
