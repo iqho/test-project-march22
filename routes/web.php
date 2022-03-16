@@ -17,7 +17,12 @@ Route::get('products/change-status', [ProductController::class, 'ChangeStatus'])
 Route::resource('products', ProductController::class);
 
 // Product Price Type Table
-Route::get('pricetypes', [PriceTypeController::class, 'index'])->name('products.price.Type');
-Route::get('pricetypes/store', [PriceTypeController::class, 'storage'])->name('products.price.Type.store');
-Route::get('pricetypes/edit/{id}', [PriceTypeController::class, 'edit'])->name('products.price.Type.edit');
-Route::get('pricetypes/create', [PriceTypeController::class, 'create'])->name('products.price.Type.cewatw');
+Route::get('all-price-types', [PriceTypeController::class, 'index'])->name('all.price-type');
+
+Route::get('price-type/create', [PriceTypeController::class, 'create'])->name('price-type.create');
+Route::post('price-type/store', [PriceTypeController::class, 'store'])->name('price-type.store');
+
+Route::get('price-type/edit/{id}', [PriceTypeController::class, 'edit'])->name('price-type.edit');
+Route::post('price-type/update/{id}', [PriceTypeController::class, 'update'])->name('price-type.update');
+
+Route::get('price-type/destroy/{id}', [PriceTypeController::class, 'destroy'])->name('price-type.destroy');

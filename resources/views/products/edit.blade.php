@@ -66,7 +66,7 @@
                         <select class="form-select" name="price_type_id[]" id="price_type_id">
                             <option value="" selected>Please Select Product Price Type</option>
                             @foreach ($price_types as $ptype)
-                            <option value="{{ $ptype->id }}">{{ $ptype->price_type }}</option>
+                            <option value="{{ $ptype->id }}">{{ $ptype->name }}</option>
                             @endforeach
                         </select>
                     </div>

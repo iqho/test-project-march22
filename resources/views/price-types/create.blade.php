@@ -20,14 +20,14 @@
 
         <div class="card-body">
 
-            <form action="{{ route('categories.store') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('price-type.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3 mt-1">
-                    <label for="name" class="form-label">Category Name</label>
-                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" placeholder="Category Name" value="{{ old('name') }}">
+                    <label for="name" class="form-label">Price Type Name</label>
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" placeholder="Price Type Name" value="{{ old('name') }}">
                 </div>
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary">Add Category</button>
+                    <button type="submit" class="btn btn-primary">Add Price Type</button>
                 </div>
             </form>
 

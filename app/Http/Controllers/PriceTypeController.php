@@ -10,52 +10,54 @@ class PriceTypeController extends Controller
 
     public function index()
     {
-        $categories = PriceType::orderBy('id', 'ASC')->get(['id','name']);
-        return view('categories.index', compact('categories'));
+        $priceTypes = PriceType::orderBy('id', 'ASC')->get(['id','name']);
+        return view('price-types.index', compact('priceTypes'));
     }
 
     public function create()
     {
-        return view('categories.create');
+        return view('price-types.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255|unique:categories'
+            'name' => 'required|max:255|unique:price_types'
         ]);
 
-        $category = new Category;
+        $ptype = new PriceType;
 
-        $category->name = $request->name;
+        $ptype->name = $request->name;
 
-        $category->save();
+        $ptype->save();
 
-        return redirect()->route('categories.index')->with('success', 'Category Created Successfully.');;
+        return redirect()->route('all.price-type')->with('success', 'Product Price Type Created Successfully.');;
     }
 
-    public function edit(Category $category)
+    public function edit($id)
     {
-      return view('categories.edit', compact('category'));
+        $ptype = PriceType::find($id);
+        return view('price-types.edit', compact('ptype'));
     }
 
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|max:255|unique:categories,name,'.$category->id
+            'name' => 'required|max:255|unique:price_types,name,'.$id
         ]);
 
-        $category->name = $request->name;
-        $category->update();
+        $ptype = PriceType::find($id);
+        $ptype->name = $request->name;
+        $ptype->update();
 
-        return redirect()->route('categories.index')->with('success', 'Category Updated Successfully.');
+        return redirect()->route('all.price-type')->with('success', 'Product Price Type Updated Successfully.');
     }
 
-    public function destroy(Category $category)
+    public function destroy($id)
     {
+        $ptype = PriceType::find($id);
+        $ptype->delete();
 
-        $category->delete();
-
-        return redirect()->route('categories.index')->with('success', 'Category Deleted Successfully.');
+        return redirect()->route('all.price-type')->with('success', 'Product Price Type Deleted Successfully.');
     }
 }

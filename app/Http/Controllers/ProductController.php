@@ -28,7 +28,7 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::Orderby('id', 'DESC')->get(['id', 'name']);
-        $price_types = PriceType::Orderby('id', 'ASC')->get(['id', 'price_type']);
+        $price_types = PriceType::Orderby('id', 'ASC')->get(['id', 'name']);
 
         return view('products.create', compact('categories', 'price_types'));
     }
@@ -60,6 +60,7 @@ class ProductController extends Controller
             }
             $product->save();
 
+            // Product Price Type Store
             $getAllPrices = $request->price;
             $price_type_id = $request->price_type_id;
             $active_date = $request->active_date;
@@ -77,8 +78,8 @@ class ProductController extends Controller
 
             $product->productPrices()->insert($values);
 
-        } 
-        
+        }
+
         catch (QueryException $e){
             $errorCode = $e->errorInfo[1];
             if($errorCode == 1062){
@@ -96,7 +97,7 @@ class ProductController extends Controller
     {
         $categories = Category::Orderby('id', 'DESC')->get(['id', 'name']);
 
-        $price_types = PriceType::Orderby('id', 'ASC')->get(['id', 'price_type']);
+        $price_types = PriceType::Orderby('id', 'ASC')->get(['id', 'name']);
 
         return view('products.edit', compact('product', 'categories', 'price_types'));
     }
@@ -119,11 +120,11 @@ class ProductController extends Controller
         if ($image) {
             $imageName = date("dmYhis").'.'.$image->getClientOriginalExtension();
             $image->move(public_path('product-images'), $imageName);
-            
+
             if($product->image !== null){
                 File::delete([public_path('product-images/'. $product->image)]);
             }
-            
+
             $product->image = $imageName;
         }
 
