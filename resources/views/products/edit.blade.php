@@ -124,12 +124,12 @@
 
                 @else
 
-                {{-- <div class="row prices g-0">
+                <div class="row prices g-0">
 
+                    <input type="hidden" value="0" name="product_price_nid[]" />
                     <div class="col-md-3 col-12 g-0" style="padding-right:5px!important">
-                        <label for="price_type_id" class="form-label">Product Price Type</label>
 
-                        <select class="form-select" name="price_type_id[]" id="price_type_id">
+                        <select class="form-select" name="price_type_nid[]" id="price_type_id">
                             <option value="" selected>Select Price Type</option>
                             @foreach ($price_types as $ptype)
                             <option value="{{ $ptype->id }}">{{ $ptype->name }}</option>
@@ -139,14 +139,12 @@
                     </div>
 
                     <div class="col-md-3 col-12 g-0" style="padding-right:5px!important">
-                        <label for="price" class="form-label">Price</label>
-                        <input type="number" min="0" class="form-control" name="price[]" id="price" placeholder="Price"
-                                value="{{ old('price[]') }}">
+                        <input type="number" min="0" class="form-control" name="pricen[]" id="price" placeholder="Price"
+                                value="{{ old('pricen[]') }}">
                     </div>
 
                     <div class="col-md-4 col-12 g-0" style="padding-right:5px!important">
-                        <label for="active_date" class="form-label">Price Active From</label>
-                        <input type="date" class="form-control" name="active_date[]" value="{{ date('Y-m-d') }}"
+                        <input type="date" class="form-control" name="active_daten[]" value="{{ date('Y-m-d') }}"
                             id="active_date">
                     </div>
 
@@ -155,7 +153,7 @@
                                 aria-hidden="true"></span> Add More</a>
                     </div>
 
-                </div> --}}
+                </div>
 
                 @endif
 
@@ -172,9 +170,10 @@
             <!-- For Add New Input Row -->
             <div class="row pricesCopy" style="display: none;">
 
+                <input type="hidden" value="0" name="product_price_nid[]" />
                 <div class="col-md-3 col-12 g-0" style="padding-right:5px!important">
 
-                    <select class="form-select" name="price_type_id[]" id="price_type_id">
+                    <select class="form-select" name="price_type_nid[]" id="price_type_id">
                         <option value="" selected>Select Price Type</option>
                         @foreach ($price_types as $ptype)
                         <option value="{{ $ptype->id }}">{{ $ptype->name }}</option>
@@ -184,12 +183,12 @@
                 </div>
 
                 <div class="col-md-3 col-12 g-0" style="padding-right:5px!important">
-                    <input type="number" min="0" class="form-control" name="price[]" id="price" placeholder="Price"
-                            value="{{ old('price[]') }}">
+                    <input type="number" min="0" class="form-control" name="pricen[]" id="price" placeholder="Price"
+                            value="{{ old('pricen[]') }}">
                 </div>
 
                 <div class="col-md-4 col-12 g-0" style="padding-right:5px!important">
-                    <input type="date" class="form-control" name="active_date[]" value="{{ date('Y-m-d') }}"
+                    <input type="date" class="form-control" name="active_daten[]" value="{{ date('Y-m-d') }}"
                         id="active_date">
                 </div>
 

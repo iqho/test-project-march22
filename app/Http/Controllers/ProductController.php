@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\PriceType;
+use Illuminate\Support\Arr;
 use App\Models\ProductPrice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -128,24 +129,46 @@ class ProductController extends Controller
 
             $product->update();
 
-            //Product Price Type Update
+            // Product Price Type Update
             $product_price_id = $request->product_price_id;
+            $product_price_nid = $request->product_price_nid;
 
-            for ($i = 0; $i < count($product_price_id); $i++) {
+            if($product_price_id > 0){
+                for ($i = 0; $i < count($product_price_id); $i++) {
 
-                $values = [
-                    'product_id' => $product->id,
-                    'price' => $request->price[$i],
-                    'price_type_id' => $request->price_type_id[$i],
-                    'active_date' => $request->active_date[$i],
-                ];
-                $check_ids = ProductPrice::find($product_price_id[$i]);
+                    $values = [
+                        'product_id' => $product->id,
+                        'price' => $request->price[$i],
+                        'price_type_id' => $request->price_type_id[$i],
+                        'active_date' => $request->active_date[$i],
+                    ];
 
-                if ($check_ids) {
-                    $product->productPrices()->where('id', $product_price_id[$i])->update($values);
-                    // $product->productPrices()->insert($values);
+                    $check_id = ProductPrice::find($product_price_id[$i]);
+
+                    if ($check_id) {
+                        $product->productPrices()->where('id', $check_id->id)->update($values);
+                    }
                 }
             }
+
+            if($product_price_nid > 0){
+
+                for ($i = 0; $i < count($product_price_nid); $i++) {
+
+                    $values2 = [
+                        'product_id' => $product->id,
+                        'price' => $request->pricen[$i],
+                        'price_type_id' => $request->price_type_nid[$i],
+                        'active_date' => $request->active_daten[$i],
+                    ];
+
+                    $product->productPrices()->insert($values2);
+
+                }
+
+            }
+
+
         } catch (QueryException $e) {
             $errorCode = $e->errorInfo[1];
             if ($errorCode == 1062) {
