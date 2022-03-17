@@ -26,38 +26,33 @@ class PriceTypeController extends Controller
         ]);
 
         $ptype = new PriceType;
-
         $ptype->name = $request->name;
-
         $ptype->save();
 
         return redirect()->route('all.price-type')->with('success', 'Product Price Type Created Successfully.');;
     }
 
-    public function edit($id)
+    public function edit(PriceType $ptype)
     {
-        $ptype = PriceType::find($id);
         return view('price-types.edit', compact('ptype'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, PriceType $ptype)
     {
         $request->validate([
-            'name' => 'required|max:255|unique:price_types,name,'.$id
+            'name' => 'required|max:255|unique:price_types,name,'.$ptype->id
         ]);
 
-        $ptype = PriceType::find($id);
         $ptype->name = $request->name;
         $ptype->update();
 
         return redirect()->route('all.price-type')->with('success', 'Product Price Type Updated Successfully.');
     }
 
-    public function destroy($id)
+    public function destroy(PriceType $ptype)
     {
-        $ptype = PriceType::find($id);
         $ptype->delete();
-
+        
         return redirect()->route('all.price-type')->with('success', 'Product Price Type Deleted Successfully.');
     }
 }

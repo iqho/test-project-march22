@@ -20,7 +20,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link @if(Request::is('price-type/create')) active @endif" aria-current="page" href="{{ route('price-type.create') }}">Create Price Type</a>
+                <a class="nav-link @if(Request::is('price-type/create')) active @endif" aria-current="page" href="{{ route('price-type.create') }}">Add Price Type</a>
             </li>
 
             <li class="nav-item">

@@ -22,7 +22,7 @@ Route::get('all-price-types', [PriceTypeController::class, 'index'])->name('all.
 Route::get('price-type/create', [PriceTypeController::class, 'create'])->name('price-type.create');
 Route::post('price-type/store', [PriceTypeController::class, 'store'])->name('price-type.store');
 
-Route::get('price-type/edit/{id}', [PriceTypeController::class, 'edit'])->name('price-type.edit');
-Route::post('price-type/update/{id}', [PriceTypeController::class, 'update'])->name('price-type.update');
+Route::get('price-type/edit/{ptype}', [PriceTypeController::class, 'edit'])->name('price-type.edit');
+Route::post('price-type/update/{ptype}', [PriceTypeController::class, 'update'])->name('price-type.update');
 
-Route::get('price-type/destroy/{id}', [PriceTypeController::class, 'destroy'])->name('price-type.destroy');
+Route::get('price-type/destroy/{ptype}', [PriceTypeController::class, 'destroy'])->name('price-type.destroy');

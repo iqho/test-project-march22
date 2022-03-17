@@ -9,7 +9,7 @@
         <div class="card-header"><h3>Add New Category</h3></div>
 
         @if ($errors->any())
-        <div class="alert alert-danger p-1 m-0">
+        <div class="alert alert-danger p-1 m-2">
             <ul class="g-0">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>

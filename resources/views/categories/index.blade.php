@@ -7,7 +7,7 @@
         <div class="card-header"><h3>All Categories</h3></div>
 
         @if ($message = Session::get('success'))
-        <div class="alert alert-success alert-dismissible fade show p-2" role="alert">
+        <div class="alert alert-success alert-dismissible fade show p-2 m-2" role="alert">
             <strong>{{ $message }}</strong>
             <button type="button" class="btn-close p-2" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>

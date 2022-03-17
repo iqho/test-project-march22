@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\PriceType;
 use App\Models\ProductPrice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\QueryException;
@@ -42,7 +43,7 @@ class ProductController extends Controller
             'category_id' => 'nullable',
         ]);
 
-        try{
+        try {
             // creating a product instance
             $product = new Product;
 
@@ -54,7 +55,7 @@ class ProductController extends Controller
 
             $image = $request->file('image');
             if ($image) {
-                $imageName = date("dmYhis").'.'.$image->getClientOriginalExtension();
+                $imageName = date("dmYhis") . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('product-images'), $imageName);
                 $product->image = $imageName;
             }
@@ -67,7 +68,7 @@ class ProductController extends Controller
 
             $values = [];
 
-            foreach($getAllPrices as $index => $price){
+            foreach ($getAllPrices as $index => $price) {
                 $values[] = [
                     'product_id' => $product->id,
                     'price' => $price,
@@ -77,15 +78,11 @@ class ProductController extends Controller
             }
 
             $product->productPrices()->insert($values);
-
-        }
-
-        catch (QueryException $e){
+        } catch (QueryException $e) {
             $errorCode = $e->errorInfo[1];
-            if($errorCode == 1062){
-              return redirect()->back()->withErrors(['msg' => 'This product name already exits under selected category']);
-            }
-            else{
+            if ($errorCode == 1062) {
+                return redirect()->back()->withErrors(['msg' => 'This product name already exits under selected category']);
+            } else {
                 return redirect()->back()->withErrors(['msg' => 'Unable to process request.Error:' . json_encode($e->getMessage(), true)]);
             }
         }
@@ -110,25 +107,53 @@ class ProductController extends Controller
             'category_id' => 'nullable',
         ]);
 
-        $product->title = $request->title;
-        $product->description = $request->description;
-        $product->is_active = $request->is_active ? $request->is_active : 0;
-        $product->category_id = $request->category_id;
+        try {
+            $product->title = $request->title;
+            $product->description = $request->description;
+            $product->is_active = $request->is_active ? $request->is_active : 0;
+            $product->category_id = $request->category_id;
 
-        $image = $request->file('image');
+            $image = $request->file('image');
 
-        if ($image) {
-            $imageName = date("dmYhis").'.'.$image->getClientOriginalExtension();
-            $image->move(public_path('product-images'), $imageName);
+            if ($image) {
+                $imageName = date("dmYhis") . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('product-images'), $imageName);
 
-            if($product->image !== null){
-                File::delete([public_path('product-images/'. $product->image)]);
+                if ($product->image !== null) {
+                    File::delete([public_path('product-images/' . $product->image)]);
+                }
+
+                $product->image = $imageName;
             }
 
-            $product->image = $imageName;
-        }
+            $product->update();
 
-        $product->update();
+            //Product Price Type Update
+            $product_price_id = $request->product_price_id;
+
+            for ($i = 0; $i < count($product_price_id); $i++) {
+
+                $values = [
+                    'product_id' => $product->id,
+                    'price' => $request->price[$i],
+                    'price_type_id' => $request->price_type_id[$i],
+                    'active_date' => $request->active_date[$i],
+                ];
+                $check_ids = ProductPrice::find($product_price_id[$i]);
+
+                if ($check_ids) {
+                    $product->productPrices()->where('id', $product_price_id[$i])->update($values);
+                    // $product->productPrices()->insert($values);
+                }
+            }
+        } catch (QueryException $e) {
+            $errorCode = $e->errorInfo[1];
+            if ($errorCode == 1062) {
+                return redirect()->back()->withErrors(['msg' => 'This product name already exits under selected category']);
+            } else {
+                return redirect()->back()->withErrors(['msg' => 'Unable to process request.Error:' . json_encode($e->getMessage(), true)]);
+            }
+        }
 
         return redirect()->route('products.index')->with('success', 'Product Updated Successfully.');
     }
@@ -136,8 +161,9 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
+        $product->productPrices()->where('product_id', $product->id)->delete();
 
-        File::delete([public_path('product-images/'. $product->image)]);
+        File::delete([public_path('product-images/' . $product->image)]);
 
         return redirect()->route('products.index')->with('success', 'Product Deleted Successfully.');
     }
@@ -148,7 +174,6 @@ class ProductController extends Controller
         $product->is_active = $request->status;
         $product->save();
 
-        return response()->json(['success'=>'Product Active Status Change Successfully.']);
+        return response()->json(['success' => 'Product Active Status Change Successfully.']);
     }
-
 }
