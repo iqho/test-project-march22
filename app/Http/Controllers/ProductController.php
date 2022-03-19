@@ -68,7 +68,7 @@ class ProductController extends Controller
             $active_date = $request->active_date;
 
             $values = [];
-
+            
             foreach ($getAllPrices as $index => $price) {
                 $values[] = [
                     'product_id' => $product->id,
@@ -78,7 +78,14 @@ class ProductController extends Controller
                 ];
             }
 
-            $product->productPrices()->insert($values);
+            if( ($price !== NULL) && ($price_type_id[$index] !== NULL) ){
+
+                $product->productPrices()->insert($values);
+                
+            }
+
+            
+            
         } catch (QueryException $e) {
             $errorCode = $e->errorInfo[1];
             if ($errorCode == 1062) {
@@ -131,7 +138,6 @@ class ProductController extends Controller
 
             // Product Price Type Update
             $product_price_id = $request->product_price_id;
-            $product_price_nid = $request->product_price_nid;
 
             if($product_price_id > 0){
                 for ($i = 0; $i < count($product_price_id); $i++) {
@@ -151,15 +157,16 @@ class ProductController extends Controller
                 }
             }
 
-            if($product_price_nid > 0){
+            $price_type_new_id = $request->price_type_new_id;
+            if($price_type_new_id > 0){
 
-                for ($i = 0; $i < count($product_price_nid); $i++) {
+                for ($i = 0; $i < count($price_type_new_id); $i++) {
 
                     $values2 = [
                         'product_id' => $product->id,
-                        'price' => $request->pricen[$i],
-                        'price_type_id' => $request->price_type_nid[$i],
-                        'active_date' => $request->active_daten[$i],
+                        'price' => $request->new_price[$i],
+                        'price_type_id' => $request->price_type_new_id[$i],
+                        'active_date' => $request->new_active_date[$i],
                     ];
 
                     $product->productPrices()->insert($values2);

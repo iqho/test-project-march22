@@ -54,7 +54,7 @@
                         </td>
                         <td class="align-middle">
                             @forelse ($product->productPrices as $row)
-                                @if ($row->price)
+                                @if ($row->price && $row->priceType)
                                     <strong> {{ $row->priceType->name }}: {{ $row->price }}</strong><br>
                                     <small> Active From: {{ date('d F Y', strtotime($row->active_date)) }} </small>
                                     <hr class="g-0">
