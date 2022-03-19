@@ -17,9 +17,6 @@
         </div>
         @endif
 
-        <div id="successMessage" class="alert alert-success alert-dismissible fade show p-2 text-center" role="alert" style="display: none; max-width:400px">
-        </div>
-
         <div class="card-body">
             <form action="{{ route('products.update', $product->id) }}" method="post" enctype="multipart/form-data">
 
@@ -86,7 +83,7 @@
 
                 @forelse ($product->productPrices as $row)
 
-                        <div class="row prices g-0 del_row{{ $row->id }}">
+                        <div class="row prices g-0">
 
                             <input type="hidden" value="{{ $row->id }}" name="product_price_id[]" />
 
@@ -121,8 +118,10 @@
                             </div>
 
                             <div class="col-md-2 col-12 d-flex align-items-end g-0" style="margin-top:5px!important;">
-                                <a href="javascript:void(0)" class="btn btn-danger deleteRecord" data-id="{{ $row->id }}"><span class="glyphicon glyphicon glyphicon-remove"
+                                <a href="#" class="btn btn-danger" onclick="return confirm('Are you sure want to delete this product ?')"><span class="glyphicon glyphicon glyphicon-remove"
                                         aria-hidden="true"></span> Remove</a>
+
+                                <button class="deleteRecord" data-id="{{ $row->id }}" >Delete Record</button>
 
                             </div>
 
@@ -226,29 +225,57 @@
 
             });
 
+            // <input data-id="{{$product->id}}" class="toggle-class" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="Inactive" {{ $product->is_active ? 'checked' : '' }}>
 
-            // Delete Price List Data
-            $('.deleteRecord').click(function() {
+            // <button class="deleteRecord" data-id="{{ $row->id }}" >Delete Record</button>
 
-                var price_id = $(this).data('id');
-                var token = $("meta[name='csrf-token']").attr("content");
 
-                $.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    cache: false,
-                    url: "{{ url('product/price-list') }}/"+price_id,
-                    data: {'price_id': price_id , '_token': token,},
-                    beforeSend:function(){
-                        return confirm("Are you sure want to delete this price ?");
-                    },
+    //         $(function() {
+    //     $('.deleteRecord').click(function() {
 
-                    success: function(data){
-                        $(".del_row" + price_id).remove();
-                        $("#successMessage").html(data.success).show().delay(3000).fadeOut(400);
-                    }
-                });
-            })
+    //         var price_id = $(this).data('id');
+
+    //         alert(price_id);
+
+    //         $.ajax({
+    //             type: "POST",
+    //             dataType: "json",
+    //             url: '{{ route('products.price-list-destroy') }}',
+    //             data: {'price_id': price_id},
+    //             success: function(data){
+    //                 // console.log(data.success)
+    //                 $("#successMessage").html(data.success).show().delay(3000).fadeOut(400);;
+    //             }
+    //         });
+    //     })
+    // })
+
+
+
+
+
+
+
+
+            // $(".deleteRecord").click(function(){
+            //     var id = $(this).data("id");
+            //     var token = $("meta[name='csrf-token']").attr("content");
+
+            //     $.ajax(
+            //     {
+            //         url: "products/price-list/"+id,
+            //         type: 'POST',
+            //         data: {
+            //             "id": id,
+            //             "_token": token,
+            //             '_method': 'DELETE',
+            //         },
+            //         success: function (){
+            //             console.log("it Works");
+            //         }
+            //     });
+
+            // });
 
         </script>
     @endpush

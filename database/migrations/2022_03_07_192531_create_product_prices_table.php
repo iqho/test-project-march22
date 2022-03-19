@@ -20,7 +20,7 @@ class CreateProductPricesTable extends Migration
             $table->bigInteger('price_type_id')->unsigned()->nullable();
 
             $table->decimal('price')->nullable();
-            $table->date('active_date');
+            $table->date('active_date')->nullable();
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products')->onUpdate('cascade')

@@ -45,6 +45,7 @@
                                 <small> No Description </small>
                             @endif
                         </td>
+
                         <td class="align-middle text-center">
                             @if ($product->image)
                             <img src="{{ asset('product-images/'.$product->image) }}" alt="{{ $product->title }}" height="40" width="45">
@@ -52,22 +53,28 @@
                             <small> No Image </small>
                             @endif
                         </td>
+
                         <td class="align-middle">
+
                             @forelse ($product->productPrices as $row)
-                                @if ($row->price && $row->priceType)
-                                    <strong> {{ $row->priceType->name }}: {{ $row->price }}</strong><br>
-                                    <small> Active From: {{ date('d F Y', strtotime($row->active_date)) }} </small>
+                                    <strong> @if ($row->priceType) {{ $row->priceType->name }} @else No Price Type @endif:
+                                        @if ($row->price) {{ $row->price }} @else No Price @endif</strong><br>
+                                        @if ($row->active_date) <small> Active From: {{ date('d F Y', strtotime($row->active_date)) }} </small> @endif
                                     <hr class="g-0">
-                                @endif
                             @empty
+
                             <small>No Price</small>
+
                             @endforelse
+
                         </td>
+
                         <td class="align-middle text-center">
 
                             <input data-id="{{$product->id}}" class="toggle-class" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="Inactive" {{ $product->is_active ? 'checked' : '' }}>
                         </td>
                         <td class="align-middle text-center">
+
                             @if ($product->category)
                             {{ $product->category->name }}
                             @else
@@ -78,18 +85,23 @@
                         <td class="align-middle text-center">
                             <div class="btn-group" role="group">
                                 <a class="btn btn-primary me-1" href="{{ route('products.edit', $product->id) }}">Edit</a>
+
                                 <form action="{{ route('products.destroy', $product->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" onclick="return confirm('Are you sure want to delete this product ?')" class="btn btn-danger btn-block">Delete</button>
                                 </form>
+
                             </div>
                         </td>
                     </tr>
                     @endforeach
+
                 </tbody>
+
             </table>
     </div>
+
 @endsection
 
 @push('scripts')

@@ -207,18 +207,5 @@ class ProductController extends Controller
 
         return response()->json(['success' => 'Product Active Status Change Successfully.']);
     }
-
-    public function priceListDestroy($price_id)
-    {
-
-        $price = ProductPrice::find($price_id);
-        $price->delete();
-
-        return response()->json([
-            'success' => 'Product Price Deleted Successfully !'
-        ]);
-
-    }
-
 }
 

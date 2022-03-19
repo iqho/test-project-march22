@@ -14,6 +14,9 @@ Route::resource('categories', CategoryController::class);
 
 // Product Table
 Route::get('products/change-status', [ProductController::class, 'ChangeStatus'])->name('product.changeStatus');
+
+Route::post('product/price-list/{price_id}', [ProductController::class, 'priceListDestroy']); // For Product Price List Delete
+
 Route::resource('products', ProductController::class);
 
 // Product Price Type Table
