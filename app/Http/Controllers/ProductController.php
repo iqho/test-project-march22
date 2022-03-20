@@ -76,20 +76,18 @@ class ProductController extends Controller
             }
 
             if ( ($price !== NULL) && ($price_type_id[$index] !== NULL) ){
-
                 $product->productPrices()->insert($values);
-
             }
-
-
 
         } catch (QueryException $e) {
             $errorCode = $e->errorInfo[1];
+
             if ($errorCode == 1062) {
                 return redirect()->back()->withErrors(['msg' => 'This product name already exits under selected category']);
             } else {
                 return redirect()->back()->withErrors(['msg' => 'Unable to process request.Error:' . json_encode($e->getMessage(), true)]);
             }
+
         }
 
         return redirect()->route('products.index')->with('success', 'Product Created Successfully.');
@@ -98,7 +96,6 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::Orderby('id', 'DESC')->get(['id', 'name']);
-
         $price_types = PriceType::Orderby('id', 'ASC')->get(['id', 'name']);
 
         return view('products.edit', compact('product', 'categories', 'price_types'));
@@ -136,7 +133,7 @@ class ProductController extends Controller
             // Product Price Type Update
             $product_price_id = $request->product_price_id;
 
-            if($product_price_id > 0){
+            if($product_price_id){
                 for ($i = 0; $i < count($product_price_id); $i++) {
 
                     $values = [
@@ -155,10 +152,9 @@ class ProductController extends Controller
             }
 
             $price_type_new_id = $request->price_type_new_id;
-            if($price_type_new_id > 0){
 
+            if($price_type_new_id){
                 for ($i = 0; $i < count($price_type_new_id); $i++) {
-
                     $values2 = [
                         'product_id' => $product->id,
                         'price' => $request->new_price[$i],
@@ -167,13 +163,9 @@ class ProductController extends Controller
                     ];
 
                     if ( ($request->new_price[$i] !== NULL) && ($request->price_type_new_id[$i] !== NULL) ){
-
                       $product->productPrices()->insert($values2);
-
                     }
-
                 }
-
             }
 
 
@@ -210,15 +202,12 @@ class ProductController extends Controller
 
     public function priceListDestroy($price_id)
     {
-
         $price = ProductPrice::find($price_id);
         $price->delete();
 
         return response()->json([
             'success' => 'Product Price Deleted Successfully !'
         ]);
-
     }
-
 }
 

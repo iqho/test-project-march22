@@ -28,9 +28,7 @@ class CategoryController extends Controller
         ]);
 
         $category = new Category;
-
         $category->name = $request->name;
-
         $category->save();
 
         return redirect()->route('categories.index')->with('success', 'Category Created Successfully.');;
@@ -57,6 +55,7 @@ class CategoryController extends Controller
     {
 
         $products = Product::where('category_id', $category->id)->count();
+        
         if($products > 0){
             Product::where('category_id', $category->id)->update(['category_id' => 1]);
         }

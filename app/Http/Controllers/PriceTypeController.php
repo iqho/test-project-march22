@@ -11,6 +11,7 @@ class PriceTypeController extends Controller
     public function index()
     {
         $priceTypes = PriceType::orderBy('id', 'ASC')->get(['id','name']);
+        
         return view('price-types.index', compact('priceTypes'));
     }
 
