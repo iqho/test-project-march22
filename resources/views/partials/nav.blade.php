@@ -27,7 +27,6 @@
                 <a class="nav-link @if(Request::is('all-price-types')) active @endif" aria-current="page" href="{{ route('all.price-type') }}">All Price Types</a>
             </li>
 
-
         </ul>
     </div>
 

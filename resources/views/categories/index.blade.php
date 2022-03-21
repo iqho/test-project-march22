@@ -53,7 +53,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    </div>
+                    </div> <!-- Close Responsive Div -->
                 </div>
             </div>
         </div> <!-- Close card-body -->

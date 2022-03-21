@@ -4,9 +4,7 @@
 
 @section('content')
     <div class="card w-100 w-lg-50 mt-2">
-
         <div class="card-header"><h3>Update Category</h3></div>
-
         <div class="card-body">
             <div class="row">
                 <div class="col-12">
@@ -37,6 +35,6 @@
                     </form>
                 </div>
             </div>
-        </div>
-    </div> <!-- Close Container -->
+        </div> <!-- Close Card Body -->
+    </div> <!-- Close Card -->
 @endsection
