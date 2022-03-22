@@ -10,6 +10,7 @@ Route::get('/', function () {
 });
 
 // Category Table
+Route::get('category/change-status', [CategoryController::class, 'ChangeStatus'])->name('category.changeStatus');
 Route::resource('categories', CategoryController::class);
 
 // Product Table
@@ -29,3 +30,5 @@ Route::get('price-type/edit/{ptype}', [PriceTypeController::class, 'edit'])->nam
 Route::post('price-type/update/{ptype}', [PriceTypeController::class, 'update'])->name('price-type.update');
 
 Route::get('price-type/destroy/{ptype}', [PriceTypeController::class, 'destroy'])->name('price-type.destroy');
+
+Route::get('price-type/change-status', [PriceTypeController::class, 'ChangeStatus'])->name('price-type.changeStatus');

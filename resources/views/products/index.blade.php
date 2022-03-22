@@ -4,8 +4,11 @@
 
 @section('content')
     <div class="card mt-3">
-        <div class="card-header"><h3 class="col-12">All Products</h3></div>
-
+        <div class="card-header">
+            <h3 class="d-inline-block">All Products</h3>
+            <a href="{{ route('products.create') }}" class="btn btn-success float-end">Create New Product</a>
+        </div>
+        
         <div class="card-body">
             <div class="row">
                 <div class="col-12">

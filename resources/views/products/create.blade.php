@@ -66,8 +66,8 @@
                             </div>
 
                             <div class="col-4 align-self-end text-center pb-2">
-                                    <input class="form-check-input" type="checkbox" name="is_active" value="1" id="flexCheckChecked" checked>
-                                    <label class="form-check-label" for="flexCheckChecked"> Is Active </label>
+                                    <input class="form-check-input" type="checkbox" name="is_active" value="1" id="flexCheckChecked" style="transform: scale(2); margin-right:8px" checked>
+                                    <label class="form-check-label" for="flexCheckChecked"> Product Is Active ?</label>
                             </div>
                         </div>
 

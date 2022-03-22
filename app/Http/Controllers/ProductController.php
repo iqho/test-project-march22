@@ -26,8 +26,8 @@ class ProductController extends Controller
 
     public function create()
     {
-        $categories = Category::Orderby('id', 'DESC')->get(['id', 'name']);
-        $price_types = PriceType::Orderby('id', 'ASC')->get(['id', 'name']);
+        $categories = Category::where('is_active', 1)->Orderby('id', 'DESC')->get(['id', 'name']);
+        $price_types = PriceType::where('is_active', 1)->Orderby('id', 'ASC')->get(['id', 'name']);
 
         return view('products.create', compact('categories', 'price_types'));
     }
@@ -95,8 +95,8 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        $categories = Category::Orderby('id', 'DESC')->get(['id', 'name']);
-        $price_types = PriceType::Orderby('id', 'ASC')->get(['id', 'name']);
+        $categories = Category::where('is_active', 1)->Orderby('id', 'DESC')->get(['id', 'name']);
+        $price_types = PriceType::where('is_active', 1)->Orderby('id', 'ASC')->get(['id', 'name']);
 
         return view('products.edit', compact('product', 'categories', 'price_types'));
     }

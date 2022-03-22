@@ -12,7 +12,7 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = Category::orderBy('id', 'ASC')->get(['id','name']);
+        $categories = Category::orderBy('id', 'ASC')->get(['id','name', 'is_active']);
         return view('categories.index', compact('categories'));
     }
 
@@ -24,11 +24,13 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255|unique:categories'
+            'name' => 'required|max:255|unique:categories',
+            'is_active' => 'boolean'
         ]);
 
         $category = new Category;
         $category->name = $request->name;
+        $category->is_active = $request->is_active ? $request->is_active : 0 ;
         $category->save();
 
         return redirect()->route('categories.index')->with('success', 'Category Created Successfully.');;
@@ -42,10 +44,12 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $request->validate([
-            'name' => 'required|max:255|unique:categories,name,'.$category->id
+            'name' => 'required|max:255|unique:categories,name,'.$category->id,
+            'is_active' => 'boolean'
         ]);
 
         $category->name = $request->name;
+        $category->is_active = $request->is_active ? $request->is_active : 0 ;
         $category->update();
 
         return redirect()->route('categories.index')->with('success', 'Category Updated Successfully.');
@@ -55,7 +59,7 @@ class CategoryController extends Controller
     {
 
         $products = Product::where('category_id', $category->id)->count();
-        
+
         if($products > 0){
             Product::where('category_id', $category->id)->update(['category_id' => 1]);
         }
@@ -64,4 +68,14 @@ class CategoryController extends Controller
 
         return redirect()->route('categories.index')->with('success', 'Category Deleted Successfully.');
     }
+
+    public function ChangeStatus(Request $request)
+    {
+        $category = Category::find($request->category_id);
+        $category->is_active = $request->status;
+        $category->save();
+
+        return response()->json(['success' => 'Category Active Status Change Successfully.']);
+    }
+
 }

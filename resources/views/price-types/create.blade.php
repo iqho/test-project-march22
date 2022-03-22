@@ -34,6 +34,14 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-12 mb-3 mt-1">
+                                <input class="form-check-input" type="checkbox" value="1" id="is_active" name="is_active" style="transform: scale(1.5); margin-right:8px" checked >
+                                <label class="form-check-label" for="is_active">
+                                Is Active
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">Add Price Type</button>
                             </div>

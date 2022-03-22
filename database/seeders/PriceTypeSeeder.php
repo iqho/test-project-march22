@@ -15,11 +15,13 @@ class PriceTypeSeeder extends Seeder
     public function run()
     {
         PriceType::create([
-            'name' => 'Retail Price'
+            'name' => 'Retail Price',
+            'is_active' => '1'
         ]);
 
         PriceType::create([
-            'name' => 'Wholesale Price'
+            'name' => 'Wholesale Price',
+            'is_active' => '1'
         ]);
     }
 }

@@ -9,14 +9,14 @@
                 <a class="nav-link @if(Request::is('categories/create')) active @endif" aria-current="page" href="{{ route('categories.create') }}">Add Categeory</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @if(Request::is('categories')) active @endif" aria-current="page" href="{{ route('categories.index') }}">All Categeory</a>
+                <a class="nav-link @if(Request::is('categories')) active @endif" aria-current="page" href="{{ route('categories.index') }}">All Categories</a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link @if(Request::is('products/create')) active @endif" aria-current="page" href="{{ route('products.create') }}">Add New Product</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @if(Request::is('products')) active @endif" aria-current="page" href="{{ route('products.index') }}">All Product</a>
+                <a class="nav-link @if(Request::is('products')) active @endif" aria-current="page" href="{{ route('products.index') }}">All Products</a>
             </li>
 
             <li class="nav-item">
