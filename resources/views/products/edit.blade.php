@@ -77,7 +77,7 @@
                             </div>
 
                             <div class="col-4 align-self-center text-center">
-                                <input class="form-check-input" type="checkbox" name="is_active" value="1" id="flexCheckChecked" @if($product->is_active == 1) checked @endif style="transform: scale(2); margin-right:8px">
+                                <input class="form-check-input" type="checkbox" name="is_active" value="1" id="flexCheckChecked" @if($product->is_active == 1) checked @endif style="transform: scale(1.5); margin-right:8px">
                                 <label class="form-check-label" for="flexCheckChecked">Product Is Active </label>
                             </div>
 

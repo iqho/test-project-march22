@@ -32,7 +32,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Category Name</th>
-                                    <th>Active Status</th>
+                                    <th class="text-center">Active Status</th>
                                     <th style="text-align:right; padding-right:50px">Action</th>
                                 </tr>
                             </thead>
