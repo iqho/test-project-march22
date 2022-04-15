@@ -20,7 +20,7 @@ class Product extends Model
 
     public function productPrices()
     {
-        return $this->hasMany(ProductPrice::class)->Orderby('id', 'ASC');
+        return $this->hasMany(ProductPrice::class)->Orderby('id', 'ASC')->with('priceType');
     }
 
     public function retailPrice() {

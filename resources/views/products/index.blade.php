@@ -8,7 +8,7 @@
             <h3 class="d-inline-block">All Products</h3>
             <a href="{{ route('products.create') }}" class="btn btn-success float-end">Create New Product</a>
         </div>
-        
+
         <div class="card-body">
             <div class="row">
                 <div class="col-12">
@@ -64,7 +64,7 @@
                                         </td>
                                         <td class="align-middle">
                                             @forelse ($product->productPrices as $row)
-                                                    <strong> @if ($row->priceType) {{ $row->priceType->name }} @else No Price Type @endif:
+                                                    <strong> @if ($row->priceType) {{ $row->priceType->name }} @else No Price Type @endif :
                                                         @if ($row->price) {{ $row->price }} @else No Price @endif</strong><br>
                                                         @if ($row->active_date) <small> Active From: {{ date('d F Y', strtotime($row->active_date)) }} </small> @endif
                                                     <hr class="g-0">
